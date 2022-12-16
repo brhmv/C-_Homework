@@ -1,0 +1,4 @@
+﻿  ConsoleApplication1.cpp
+C:\Users\Ibrah_dw90\source\repos\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(82,75): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\Ibrah_dw90\source\repos\ConsoleApplication1\ConsoleApplication1\ConsoleApplication1.cpp(332,13): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  ConsoleApplication1.vcxproj -> C:\Users\Ibrah_dw90\source\repos\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe
