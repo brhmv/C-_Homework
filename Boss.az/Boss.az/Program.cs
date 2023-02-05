@@ -1,7 +1,6 @@
 ﻿using Boss.az;
 using System.Text.Json;
 
-
 List<Worker> Workers = new();
 
 List<Employer> Employers = new();
@@ -60,109 +59,93 @@ e3.Vacancies = vs3;
 
 #endregion
 
-void addNewWorkerToFIle()
+#region Functions
+//read from file
+void readEmployersFromFileToList(List<Employer> list1)
 {
-    List<Worker>? workers = null;
-    var json = File.ReadAllText("Workers.json");
-    workers = JsonSerializer.Deserialize<List<Worker>>(json);
-
-    workers.Add(Worker.AddWorker());
-
-    var json1 = JsonSerializer.Serialize(workers);
-    File.WriteAllText("Workers.json", json);
-
-    Console.WriteLine("Worker added file succesfully!");
-    Thread.Sleep(1000);
-    Console.Clear();
-}
-
-void addNewEmployerToFIle()
-{
-    List<Employer>? employers = null;
     var json = File.ReadAllText("Employers.json");
-    employers = JsonSerializer.Deserialize<List<Employer>>(json);
-
-    employers.Add(Employer.CreateEmployer());
-
-    var json1 = JsonSerializer.Serialize(employers);
-    File.WriteAllText("Employers.json", json);
-
-    Console.WriteLine("Employer added file succesfully!");
-    Thread.Sleep(1000);
-    Console.Clear();
+    list1 = JsonSerializer.Deserialize<List<Employer>>(json);
 }
 
-
-bool WorkerSignIn()
+void readWorkerssFromFileToList(List<Worker> list)
 {
-    while (true)
-    {
-        string name, password;
-        Console.WriteLine("Insert name: ");
-        name = Console.ReadLine();
-
-        Console.WriteLine("Insert password: ");
-        password = Console.ReadLine();
-
-        List<Worker>? WorkersFromFile = null;
-        var json = File.ReadAllText("Workers.json");
-        WorkersFromFile = JsonSerializer.Deserialize<List<Worker>>(json);
-
-        foreach (var item in WorkersFromFile)
-        {
-            if (item.Name == name || item.Password == password)
-            {
-                Console.WriteLine("Signed in succesfully:");
-                Thread.Sleep(1000);
-                Console.Clear();
-                return true;
-            }
-        }
-        return false;
-    }
+    var json = File.ReadAllText("Workers.json");
+    list = JsonSerializer.Deserialize<List<Worker>>(json);
 }
 
-Employer GetEmployerFromFile(string empname, string emppassword)
+//Write to File
+void writeEmployersToFile(List<Employer> list)
 {
-    while (true)
-    {
-        List<Employer>? EmployersFromFile = null;
-        var json = File.ReadAllText("Employers.json");
-        EmployersFromFile = JsonSerializer.Deserialize<List<Employer>>(json);
-
-        foreach (var item in EmployersFromFile)
-        {
-            if (item.Name == empname || item.Password == emppassword)
-            {
-                return item;
-            }
-        }
-        return null;
-    }
+    var json1 = JsonSerializer.Serialize(list);
+    File.WriteAllText("Employers.json", json1);
 }
 
-bool EmployerIsExistInFile(string empname, string emppassword)
+void writeWorkersToFile(List<Worker> list)
 {
-    while (true)
-    {
-        List<Employer>? EmployersFromFile = null;
-        var json = File.ReadAllText("Employers.json");
-        EmployersFromFile = JsonSerializer.Deserialize<List<Employer>>(json);
-
-        foreach (var item in EmployersFromFile)
-        {
-            if (item.Name == empname || item.Password == emppassword)
-            {
-                Console.WriteLine("Signed in succesfully:");
-                Thread.Sleep(1000);
-                Console.Clear();
-                return true;
-            }
-        }
-        return false;
-    }
+    var json1 = JsonSerializer.Serialize(list);
+    File.WriteAllText("Workers.json", json1);
 }
 
+//////////////////////////////////////////////////////////
+
+Employer GetEmployerFromList(string? empname, string? emppassword)
+{
+    foreach (var item in Employers)
+    {
+        if (item.Name == empname && item.Password == emppassword)
+        {
+            return item;
+        }
+    }
+    return null;
+}
+
+Worker GetWorkerFromList(string? workername, string? workerpassword)
+{
+    foreach (var item in Workers)
+    {
+        if (item.Name == workername && item.Password == workerpassword)
+        {
+            return item;
+        }
+    }
+    return null;
+}
+
+//////////////////////////////////////////////////////////
+
+bool EmployerIsExistInList(string? empname, string? emppassword)
+{
+    foreach (var item in Employers)
+    {
+        if (item.Name == empname && item.Password == emppassword)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool WorkersIsExistInList(string? workername, string? workerpassword)
+{
+    foreach (var item in Workers)
+    {
+        if (item.Name == workername && item.Password == workerpassword)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+//////////////////////////////////////////////////////////
+
+int IDgetter()
+{
+    Console.WriteLine("Insert Id: ");
+    int id = Convert.ToInt32(Console.ReadLine());
+    return id;
+}
 
 //ilk ishlet bunu ki vacansiyalar liste yigilsin
 void FillListWithAllVacancies()
@@ -176,34 +159,11 @@ void FillListWithAllVacancies()
     }
 }
 
-
 void ShowAnyVacancyList(List<Vacancy> list)
 {
     foreach (var item in list)
     {
         Console.WriteLine(item);
-    }
-}
-
-
-
-//worker
-void apply(string title, string content, Worker worker)
-{
-    int id;
-    Console.WriteLine("Id:");
-    id = Convert.ToInt32(Console.ReadLine());
-
-    foreach (var item in Employers)
-    {
-        foreach (var vacancy in item.Vacancies)
-        {
-            if (vacancy.ObjectId == id)
-            {
-                //item.Notifications.Where(n => n.Vacancy == vacancy);
-                item.Notifications.Add(new Notification(title, content, worker, vacancy));
-            }
-        }
     }
 }
 
@@ -304,124 +264,329 @@ void FilterVacancies()
     }
 }
 
-
-//FillListWithAllVacancies();
-
-//FilterVacancies();
-
-while (true)
+void EditNotifications(Employer Item)
 {
     int ch2;
-    Console.WriteLine("1)Employer 2)Worker 3)Exit");
-    ch2 = Convert.ToInt32(Console.ReadLine());
-
-    if (ch2 == 1)
+    while (true)
     {
-        while (true)
+        Console.Clear();
+        Item.ShowAllNotifications();
+        Console.WriteLine("1)Delete Notification(ID)\n2)Accept Notification(ID)\n3)Reject Notification(ID)\n4)Exit\n");
+        ch2 = Convert.ToInt32(Console.ReadLine());
+
+        if (ch2 == 1)
         {
-            Console.WriteLine("1)Sign up\n2)Sign in\n3)Exit\n");
-            ch2 = Convert.ToInt32(Console.ReadLine());
-
-            if (ch2 == 1)
-            {
-                addNewEmployerToFIle();
-                continue;
-            }
-            else if (ch2 == 2)
-            {
-                string name, password;
-                Console.WriteLine("Insert name: ");
-                name = Console.ReadLine();
-
-                Console.WriteLine("Insert password: ");
-                password = Console.ReadLine();
-
-                if (EmployerIsExistInFile(name, password))
-                {
-                    Employer Item = GetEmployerFromFile(name, password);
-                    while (true)
-                    {
-                        Console.WriteLine("1)Show all vacancies\n2)Show all Notifications\n");
-                        ch2 = Convert.ToInt32(Console.ReadLine());
-
-                        if (ch2 == 1)
-                        {
-                            Console.WriteLine("1)Add Vacancy\n2)Delete Vacancy\n");
-                            ch2 = Convert.ToInt32(Console.ReadLine());
-                            if (ch2 == 1)
-                            {
-                                Item.AddVacancy(Vacancy.CreateVacancy());
-                                Console.WriteLine("Vacancy added succesfully!");
-                            }
-                            else if (ch2 == 2)
-                            {
-                                int id;
-                                Console.WriteLine("Insert id:");
-                                id = Convert.ToInt32(Console.ReadLine());
-                                Item.DeleteVacancy(id);
-                            }
-                            else
-                            {
-                                Console.WriteLine("Choose one of them!");
-                                Console.ReadKey();
-                                Console.Clear();
-                            }
-                        }
-
-                        //Show all Notifications
-                        //Delete Notification
-                        //Accept Notification
-                        //reject Notification
-                        //Filter cv by index
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Employer cant found !");
-                    Thread.Sleep(1000);
-                    Console.Clear();
-                    continue;
-                }
-            }
-            else if (ch2 == 3) break;
-            else continue;
+            Console.Clear();
+            Item.ShowAllNotifications();
+            Item.DeleteNotification(IDgetter());
+            Console.ReadKey();
+            Console.Clear();
         }
-    }
-
-    else if (ch2 == 2)
-    {
-        while (true)
+        else if (ch2 == 2)
         {
-            Console.WriteLine("1)Sign up\n2)Sign in\n3)Exit\n");
-            ch2 = Convert.ToInt32(Console.ReadLine());
-
-            if (ch2 == 1)
-            {
-                addNewWorkerToFIle();
-                continue;
-            }
-            else if (ch2 == 2)
-            {
-                if (WorkerSignIn())
-                {
-                    //Workerin ishleri
-
-                }
-                else
-                {
-                    Console.WriteLine("Worker cant found !");
-                    Thread.Sleep(1000);
-                    Console.Clear();
-                    continue;
-                }
-            }
-            else if (ch2 == 3) break;
-            else continue;
+            Console.Clear();
+            Item.ShowAllNotifications();
+            Item.AcceptNotification(IDgetter());
+            Console.ReadKey();
+            Console.Clear();
         }
-    }
-    else
-    {
-        Console.WriteLine("Choose one of them!");
-        continue;
+        else if (ch2 == 3)
+        {
+            Console.Clear();
+            Item.ShowAllNotifications();
+            Item.RejectNotification(IDgetter());
+            Console.ReadKey();
+            Console.Clear();
+        }
+        else if (ch2 == 4) break;
+        else
+        {
+            ElseFunction();
+            continue;
+        }
     }
 }
+
+void apply(string? content, Worker worker)
+{
+    int id;
+    Console.WriteLine("Id:");
+    id = Convert.ToInt32(Console.ReadLine());
+
+    foreach (var item in Employers)
+    {
+        foreach (var vacancy in item.Vacancies)
+        {
+            if (vacancy.ObjectId == id)
+            {
+                item.Notifications.Add(new Notification(content, worker, vacancy));
+            }
+        }
+    }
+}
+
+
+List<CV> GetCVsFromAllNotification(Employer employer)
+{
+    List<CV> cvs = new();
+
+    foreach (var item in employer.Notifications)
+    {
+        cvs.Add(item.Worker.CV);
+    }
+    return cvs;
+}
+
+void ElseFunction()
+{
+    Console.WriteLine("Choose one of them!");
+    Console.ReadKey();
+    Console.Clear();
+}
+#endregion
+
+/////////
+//Start//
+
+writeEmployersToFile(Employers);
+
+List<Employer> temp=null;
+
+readEmployersFromFileToList(temp);
+
+//readWorkerssFromFileToList(Workers);
+
+
+
+
+FillListWithAllVacancies();
+
+foreach (var item in temp)
+{
+    Console.WriteLine(item);
+}
+
+Console.WriteLine();
+
+foreach (var item in AllVacancies)
+{
+    Console.WriteLine(item);
+}
+
+//while (true)
+//{
+//    int ch2;
+//    Console.WriteLine("1)Employer 2)Worker 3)Exit");
+//    ch2 = Convert.ToInt32(Console.ReadLine());
+
+//    //employer
+
+//    if (ch2 == 1)
+//    {
+//        while (true)
+//        {
+//            Console.WriteLine("1)Sign up\n2)Sign in\n3)Exit\n");
+
+//            ch2 = Convert.ToInt32(Console.ReadLine());
+
+//            if (ch2 == 1)
+//            {
+//                //addNewEmployerToFile();
+//                Employers.Add(Employer.CreateEmployer());
+//                continue;
+//            }
+
+//            else if (ch2 == 2)
+//            {
+//                string name, password;
+//                Console.WriteLine("Insert name: ");
+//                name = Console.ReadLine();
+
+//                Console.WriteLine("Insert password: ");
+//                password = Console.ReadLine();
+
+//                if (EmployerIsExistInList(name, password))
+//                {
+//                    Employer Item = GetEmployerFromList(name, password);
+//                    while (true)
+//                    {
+//                        Console.WriteLine("1)Show all vacancies\n2)Show all Notifications\n3)Exit\n");
+//                        ch2 = Convert.ToInt32(Console.ReadLine());
+
+//                        if (ch2 == 1)
+//                        {
+//                            Console.Clear();
+//                            Console.WriteLine("1)Add Vacancy\n2)Delete Vacancy\n3)Exit\n");
+//                            ch2 = Convert.ToInt32(Console.ReadLine());
+
+//                            if (ch2 == 1)
+//                            {
+//                                Console.Clear();
+//                                Item.AddVacancy(Vacancy.CreateVacancy());
+//                                Console.WriteLine("Vacancy added succesfully!");
+//                            }
+//                            else if (ch2 == 2)
+//                            {
+//                                Console.Clear();
+//                                int id;
+//                                Console.WriteLine("Insert id:");
+//                                id = Convert.ToInt32(Console.ReadLine());
+//                                Item.DeleteVacancy(id);
+//                                Console.WriteLine("Vacancy deleted succesfully!");
+//                                Console.ReadKey();
+//                            }
+//                            else if (ch2 == 3) break;
+//                            else
+//                            {
+//                                Console.WriteLine("Choose one of them!");
+//                                Console.ReadKey();
+//                                Console.Clear();
+//                                continue;
+//                            }
+//                        }
+
+//                        else if (ch2 == 2)
+//                        {
+//                            Console.Clear();
+//                            Item.ShowAllNotifications();
+//                            EditNotifications(Item);
+//                            Console.ReadKey();
+//                            Console.Clear();
+//                        }
+
+//                        else if (ch2 == 3) break;
+
+//                        else
+//                        {
+//                            ElseFunction();
+//                            continue;
+//                        }
+//                    }
+//                }
+
+//                else
+//                {
+//                    Console.WriteLine("Employer isnt exist!");
+//                    Console.ReadKey();
+//                    Console.Clear();
+//                    continue;
+//                }
+//            }
+
+//            else if (ch2 == 3) break;
+
+//            else
+//            {
+//                ElseFunction();
+//                continue;
+//            }
+//        }
+//    }
+
+//    //worker
+
+//    else if (ch2 == 2)
+//    {
+//        while (true)
+//        {
+//            Console.WriteLine("1)Sign up\n2)Sign in\n3)Exit\n");
+//            ch2 = Convert.ToInt32(Console.ReadLine());
+
+//            if (ch2 == 1)
+//            {
+//                Workers.Add(Worker.AddWorker());
+//                //addNewWorkerToFile();
+//                continue;
+//            }
+
+//            else if (ch2 == 2)
+//            {
+//                string name, password;
+//                Console.WriteLine("Insert name: ");
+//                name = Console.ReadLine();
+
+//                Console.WriteLine("Insert password: ");
+//                password = Console.ReadLine();
+
+//                if (WorkersIsExistInList(name, password))
+//                {
+//                    Worker worker = GetWorkerFromList(name, password);
+
+//                    while (true)
+//                    {
+//                        Console.Clear();
+//                        Console.WriteLine("1)Create CV\n2)Show All Vacancies\n3)Filter vacancies\n4)Apply Work\n5)Exit:");
+//                        ch2 = Convert.ToInt32(Console.ReadLine());
+
+//                        if (ch2 == 1)
+//                        {
+//                            worker.CV = CV.CreateCv();
+//                            Console.WriteLine("CV created succesfully!");
+//                            Console.ReadKey();
+//                            Console.Clear();
+//                        }
+
+//                        else if (ch2 == 2)
+//                        {
+//                            foreach (var item in AllVacancies)
+//                            {
+//                                Console.WriteLine(item);
+//                            }
+//                        }
+
+//                        else if (ch2 == 3)
+//                        {
+//                            FilterVacancies();
+//                            Console.ReadKey();
+//                            continue;
+//                        }
+
+//                        else if (ch2 == 4)
+//                        {
+//                            Console.WriteLine("Insert content:");
+//                            string? content = Console.ReadLine();
+//                            apply(content, worker);
+//                            Console.WriteLine("Applied succesfully");
+//                            Console.ReadKey();
+//                            Console.Clear();
+//                        }
+
+//                        else if (ch2 == 5) break;
+
+//                        else
+//                        {
+//                            Console.WriteLine("Choose one of them!");
+//                            Console.ReadKey();
+//                            continue;
+//                        }
+//                    }
+//                }
+
+//                else
+//                {
+//                    Console.WriteLine("Worker cant found !");
+//                    Thread.Sleep(1000);
+//                    Console.Clear();
+//                    continue;
+//                }
+//            }
+
+//            else if (ch2 == 3) break;
+
+//            else continue;
+//        }
+//    }
+
+//    //Exit
+
+//    else if (ch2 == 3) break;
+
+//    else
+//    {
+//        ElseFunction();
+//        continue;
+//    }
+//}
+
+//writeEmployersToFile(Employers);
+//writeWorkersToFile(Workers);

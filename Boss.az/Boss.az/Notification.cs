@@ -10,8 +10,6 @@
 
         public int ObjectId;
 
-        public string Title { get; set; }
-
         public string Content { get; set; }
 
         public Worker Worker { get; set; }
@@ -25,16 +23,16 @@
         public bool AcceptedOrNot { get; set; }
         #endregion
 
-        public Notification(string title, string content, Worker worker, Vacancy vacancy)
+        public Notification( string content, Worker worker, Vacancy vacancy)
         {
             ObjectId = ID++;
-            Title = title;
+          
             Content = content;
             Worker = worker;
             Vacancy = vacancy;
             Datetime = DateTime.Now;
         }       
 
-        public override string ToString() => $"Notification Id:{ObjectId} From {Worker} worker\nContent:{Content}\nTitle:{Title}\nStatus:{Status}";
+        public override string ToString() => $"Notification Id:{ObjectId} From {Worker} worker\nContent:{Content}\nStatus:{Status}";
     }
 }

@@ -16,6 +16,7 @@
 
         #region Accept/ Reject Notification
         //CV statsusu deyis 
+
         public void AcceptNotification(int id)
         {
             foreach (var item in Notifications)
@@ -98,6 +99,26 @@
                 {
                     Vacancies.Remove(item);
                 }   
+            }
+        }
+
+        public void DeleteNotification(int id)
+        {
+            foreach (var item in Notifications)
+            {
+                if (item.ObjectId==id)
+                {
+                    Notifications.Remove(item);
+                    Console.WriteLine("Notification deleted Succesfully!");
+                }                
+            }
+        }
+
+        public void ShowAllNotifications()
+        {
+            foreach (var item in Notifications)
+            {
+                Console.WriteLine(item);
             }
         }
 

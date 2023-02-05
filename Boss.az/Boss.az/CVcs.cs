@@ -1,7 +1,7 @@
 ﻿namespace Boss.az
 {
     enum Level { A1 = 1, A2, B1, B2, C1, C2 }
-    enum CVstatus { accept=1,reject}
+    enum CVstatus { accepted=1,reject}
 
     class Language
     {
@@ -153,7 +153,7 @@
                     skills = Console.ReadLine().Split('|');
 
 
-                    Console.WriteLine("Insert comanies which you worked (use | for split):");
+                    Console.WriteLine("Insert companies which you worked (use | for split):");
                     companies = Console.ReadLine().Split('|');
 
                     List<Language> languages = default;

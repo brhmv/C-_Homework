@@ -4,11 +4,12 @@
 
     internal class Vacancy
     {
-
         #region Properties
         private static int ID = 0;
 
         public int ObjectId;
+
+        //public List<CV> cvs = new();
 
         public Employer FromWhichEmployer { get; set; }
 
