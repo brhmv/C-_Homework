@@ -1,0 +1,7 @@
+﻿  DynamicArray.cpp
+C:\Users\user\source\repos\temp\temp\DynamicArray.cpp(193,13): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\user\source\repos\temp\temp\DynamicArray.cpp(46,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\user\source\repos\temp\temp\DynamicArray.cpp(45): message : while compiling class template member function 'void DynamicArray<int,10>::InitRandom(void)'
+C:\Users\user\source\repos\temp\temp\DynamicArray.cpp(195): message : see reference to function template instantiation 'void DynamicArray<int,10>::InitRandom(void)' being compiled
+C:\Users\user\source\repos\temp\temp\DynamicArray.cpp(194): message : see reference to class template instantiation 'DynamicArray<int,10>' being compiled
+  temp.vcxproj -> C:\Users\user\source\repos\temp\x64\Debug\temp.exe
